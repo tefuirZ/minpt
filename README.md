@@ -11,11 +11,14 @@
 - 多站点根据配置文件中的站点名称对种子进行命名
 
 ## 食用方法
-###一、源码运行
+### 一、源码运行
 1. 机器安装Python3.7以上环境
 2. 使用 `pip install -r requirements.txt` 安装所需模块
 3. 修改配置文件 `config.ini` 中的信息
-###二、docker运行
+
+
+
+### 二、docker运行
 ```
 docker run -d
 -- name minpt\
