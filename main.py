@@ -7,9 +7,9 @@ import lxml
 import re
 import configparser
 from urllib.parse import urlparse, parse_qs, urlencode
-CONFIG_FILE_PATH = os.getenv('CONFIG_FILE_PATH', 'config.ini')
+
 # 检查配置文件是否存在，如果不存在，则创建一个默认配置文件
-CONFIG_FILE_PATH = 'config.ini'
+CONFIG_FILE_PATH = os.getenv('CONFIG_FILE_PATH', 'config.ini')
 if not os.path.exists(CONFIG_FILE_PATH):
     with open(CONFIG_FILE_PATH, 'w') as config_file:
         config_file.write("""[DEFAULT]
@@ -27,7 +27,7 @@ download_times = 1
 
 # 读取配置文件
 config = configparser.ConfigParser()
-config.read(CONFIG_FILE_PATH)
+config.read(CONFIG_FILE_PATH, encoding='utf-8')
 
 # 读取 runsite 配置项，用于选择要运行的站点
 runsite = config.get('DEFAULT', 'runsite', fallback='hhanclub')
@@ -46,7 +46,7 @@ url_half = re.search(r'(https?://[^/]+)/', site_url).group(1)
 referer = config.get(runsite, 'referer', fallback='')
 host = re.search(r'://([^/]+)/', site_url).group(1)
 
-monitor_path = config.get(runsite, 'monitor_path', fallback=r'F:\\1\\')
+monitor_path = config.get(runsite, 'monitor_path', fallback=r'\\192.168.1.248\share\docker\transmission\zhong\\')
 user_agent = config.get(runsite, 'user_agent', fallback='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 Edg/118.0.2088.76')
 download_times = config.getint(runsite, 'download_times', fallback=1)
 site_cookie = f"c_lang; {site_cookie}"
@@ -385,4 +385,4 @@ for _ in range(download_times):
             DIC_torrents_class_name)
         task_list = task.find_free(DIC_free_tag)
         download_free(torrents_amount, task_list, monitor_path)
-print('所有种子下载完成')
+print('ok')
