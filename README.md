@@ -11,15 +11,23 @@
 - 多站点根据配置文件中的站点名称对种子进行命名
 
 ## 食用方法
-
+###一、源码运行
 1. 机器安装Python3.7以上环境
 2. 使用 `pip install -r requirements.txt` 安装所需模块
 3. 修改配置文件 `config.ini` 中的信息
-4. 后续可能考虑打包一个镜像
+###二、docker运行
+```
+docker run -d
+-- name minpt\
+-v /your/path:/config\ #你要存放config的目录，注意必须要有一个config.ini否则容器起不来
+-v /yourpath:/torrent\ #你要存放torrent文件的目录，配置文件中可以修改但是修改某个站点的，默认容器中试torrent
+itefuir/minpt:latest
+
+```
 
 配置文件示例：
 
-```ini
+```
 [DEFAULT]
 runsite = pttime
 
