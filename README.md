@@ -12,7 +12,7 @@
 
 ## 食用方法
 
-1. 机器安装Python环境
+1. 机器安装Python3.7以上环境
 2. 使用 `pip install -r requirements.txt` 安装所需模块
 3. 修改配置文件 `config.ini` 中的信息
 4. 后续可能考虑打包一个镜像
