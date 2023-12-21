@@ -22,8 +22,10 @@
 ```
 docker run -d \
   --name minpt \
-  -v /your/path/config.ini:/app/config.ini \ #本地机存放config.ini的路径
-  -v /yourpath:/torrent \ #你要存放torrent文件的目录，配置文件中可以修改但是修改某个站点的，默认容器中试torrent
+  -v /your/path/config.ini:/app/config.ini \
+  #本地机存放config.ini的路径
+  -v /yourpath:/torrent \
+  #你要存放torrent文件的目录，配置文件中可以修改但是修改某个站点的，默认容器中试torrent
 itefuir/minpt:latest
 
 ```
