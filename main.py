@@ -8,9 +8,26 @@ import re
 import configparser
 from urllib.parse import urlparse, parse_qs, urlencode
 
+# 检查配置文件是否存在，如果不存在，则创建一个默认配置文件
+CONFIG_FILE_PATH = 'config.ini'
+if not os.path.exists(CONFIG_FILE_PATH):
+    with open(CONFIG_FILE_PATH, 'w') as config_file:
+        config_file.write("""[DEFAULT]
+runsite = hhanclub
+
+[hhanclub]
+site_name = YourSiteName
+site_url = YourSiteURL
+site_cookie = YourSiteCookie
+referer = YourReferer
+monitor_path = F:\\1\\
+user_agent = Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 Edg/118.0.2088.76
+download_times = 1
+""")
+
 # 读取配置文件
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read(CONFIG_FILE_PATH)
 
 # 读取 runsite 配置项，用于选择要运行的站点
 runsite = config.get('DEFAULT', 'runsite', fallback='hhanclub')
@@ -58,8 +75,12 @@ for _ in range(download_times):
 
 
 
+
     is_gazelle = False
     is_encrypted = False
+    # 下载种子文件
+
+
 
     upgrade_insecure_requests = ''
     dnt = ''
@@ -139,23 +160,17 @@ for _ in range(download_times):
             return '{}_{}.torrent'.format(site_name, self.torrent[1])
 
         def download(self):
+            torrent_id = self.torrent[1]
+            download_url = f"https://{host}/download.php?id={torrent_id}"
+            res = requests_check_headers(download_url)
 
-            down_url = url_half + self.torrent[3]
-            if self.torrent[0]:
-                res = requests_check_headers(site_url)
-                print('\n\n你注意你下载的种子大小了吗？ ')
-                try:
-                    print('下载中 ' + self.__str__())
-                except:
-                    print('无法打印 torrent 名称.')
-                try:
-                    print('写入 torrent 到你的路径...')
-                    with open(monitor_path + self.__str__(), 'wb') as f:
-                        f.write(res.content)
-                except:
-                    print('无法在你的路径中写入 torrent 文件!!')
-            else:
-                pass
+            print('\n\nDownloading ' + self.__str__())
+            try:
+                print('正在下载。。。。。')
+                with open(monitor_path + self.__str__(), 'wb') as f:
+                    f.write(res.content)
+            except Exception as e:
+                print(f'Error writing torrent file: {e}')
 
         def encrypted_download(self, download_class_name):
             download_page = url_half + self.torrent[2]
@@ -166,17 +181,17 @@ for _ in range(download_times):
                     'href']
                 down_url = url_half + down_url_last
                 res = requests_check_headers(down_url)
-                print('\n\nPrinting the download statements: ')
+                print('\n\n注意:下载中字大小！！！！ ')
                 try:
-                    print('Downloading' + self.__str__())
+                    print('下载中' + self.__str__())
                 except:
                     print('Cannot print the torrent name.')
                 try:
-                    print('Writing torrent to your path ...')
+                    print('写入中。。。。。')
                     with open(monitor_path + self.__str__(), 'wb') as f:
                         f.write(res.content)
                 except:
-                    print('Cannot write torrent file in your path!!')
+                    print('无法写入目录，请检查目录是否正确、是否有权限访问目录。')
             else:
                 pass
 
@@ -206,26 +221,22 @@ for _ in range(download_times):
         def __str__(self):
             return self.processed_list
 
-        def find_all_torrents(self):
-            all_torrents = []
+        def find_free(self):
+            free_state = []
             for entry in self.processed_list:
-                last_download_url = entry.a['href']
-                torrent_id = re.search(pattern, last_download_url).group(1)
-                details = 'torrents.php?id=' + torrent_id
-                all_torrents.append((True, torrent_id, details, last_download_url))
-            print("\n\nAll torrents' information list shows below: ")
-            try:
-                print(all_torrents)
-            except:
-                print('Cannot print the all_torrents list')
-            return all_torrents
+                details = entry.a['href']
+                torrent_id = re.search(pattern, details).group(1)
+                last_download_url = 'NULL'
+                for subentry in entry.select('.embedded'):
+                    if 'href="download.php?' in str(subentry):
+                        last_download_url = subentry.a['href']
+                free_state.append((True, torrent_id, details, last_download_url))
+
+            return free_state
 
 
     #####
     class GazellePage():
-        '''
-        Getting a torrent page with all torrents in it
-        '''
 
         def __init__(self, torrents_class_name):
             self.torrents_list = []
@@ -239,16 +250,16 @@ for _ in range(download_times):
             for entry in self.torrents_list:
                 if entry['colspan'] == colspan:
                     self.processed_list.append(entry)
-            print('\n\nThe website shows: ')
-            try:
-                print(str(soup))
-            except:
-                print('Cannot print soup')
-            print('\n\nThe torrents informations(processed_list) shows below: ')
-            try:
-                print(self.processed_list)
-            except:
-                print('Cannot print processed_list')
+#            print('\n\nThe website shows: ')
+#            try:
+#                print(str(soup))
+#            except:
+#                print('Cannot print soup')
+#            print('\n\nThe torrents informations(processed_list) shows below: ')
+#            try:
+#                print(self.processed_list)
+#            except:
+#                print('Cannot print processed_list')
 
         def __str__(self):
             return self.processed_list
@@ -357,7 +368,7 @@ for _ in range(download_times):
                 torrents_class_name)
             task = NexusPage(
                 torrents_class_name)
-            task_list = task.find_all_torrents()
+            task_list = task.find_free()
             download_free(torrents_amount, task_list, monitor_path)
         else:
             task = NexusPage(
@@ -374,4 +385,4 @@ for _ in range(download_times):
             DIC_torrents_class_name)
         task_list = task.find_free(DIC_free_tag)
         download_free(torrents_amount, task_list, monitor_path)
-print('ok')
+print('所有种子下载完成')
