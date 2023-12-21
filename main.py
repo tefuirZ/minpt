@@ -7,9 +7,9 @@ import lxml
 import re
 import configparser
 from urllib.parse import urlparse, parse_qs, urlencode
-
-# 检查配置文件是否存在，如果不存在，则创建一个默认配置文件
 CONFIG_FILE_PATH = os.getenv('CONFIG_FILE_PATH', 'config.ini')
+# 检查配置文件是否存在，如果不存在，则创建一个默认配置文件
+CONFIG_FILE_PATH = 'config.ini'
 if not os.path.exists(CONFIG_FILE_PATH):
     with open(CONFIG_FILE_PATH, 'w') as config_file:
         config_file.write("""[DEFAULT]
