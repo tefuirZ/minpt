@@ -15,6 +15,7 @@
 1. 机器安装Python3.7以上环境
 2. 使用 `pip install -r requirements.txt` 安装所需模块
 3. 修改配置文件 `config.ini` 中的信息
+4. 环境配置完之后 运行`python3.x mian.py` 其中`python3.x`根据你安装的python环境更改
 
 
 
