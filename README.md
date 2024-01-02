@@ -18,6 +18,7 @@
 2. 使用 `pip install -r requirements.txt` 安装所需模块
 3. 修改配置文件 `config.ini` 中的信息，根据注释进行配置修改
 4. 环境配置完之后 运行`python3.x mian.py` 其中`python3.x`根据你安装的python环境更改
+5. 其中保存链接的文本文件地址跟下载路径相同
 
 
 
@@ -30,6 +31,7 @@ docker run -d \
 itefuir/minpt:latest
 
 ```
+ 其中保存链接的文本文件地址跟下载路径相同
 使用docker运行时注意目录的权限，如果目录不存在，一定一定一定要先将目录创建并且给777权限否则会看不到种子文件。
 
 配置文件示例看`config.ini`
